@@ -1,10 +1,25 @@
 print("Loading Word Chain Game ...")
+#DB : word_dictionary_kor.txt
 
 import time, sys
 from utils import humanEg, computerEg, defaultEg
 
 dicData = [] #사전목록
 useData = [] #이미사용된 단어 저장
+time.sleep(2)
+
+print("""
+
+    *************************[ Rule ]****************************
+    1. DB에 있는 단어만 사용 가능
+    2. DB에 없는 단어를 입력 할 경우,
+       DB에 저장되어 다음 게임에서 사용 가능
+    3. 직접 DB를 수정하고 싶을 경우,
+       word_dictionary_kor.txt파일 수정
+    *************************************************************
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+""", end="")
 time.sleep(3)
 
 try:
@@ -22,7 +37,17 @@ while True:
         break
 
 #스타트 엔진
-print("Please enter a word")
+def countdown(n):
+    if n == 0:
+        print("Please enter a word")
+    else:
+        print(n)
+        time.sleep(1)
+        countdown(n-1)
+
+print("Start Game !!!")
+time.sleep(1)
+countdown(3)
 lastChar = ""
 f = open("db/word_dictionary_kor.txt","r")
 
@@ -70,4 +95,3 @@ while True:
     print("Mopy : ", computerUse)
     useData.append(computerUse)
     lastChar = defaultEg.getLastChar(computerUse)
-
