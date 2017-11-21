@@ -2,6 +2,7 @@ print("Loading Word Chain Game ...")
 #DB : word_dictionary_kor.txt
 
 import time, sys
+import korean_dictionary_api as kda
 from utils import humanEg, computerEg, defaultEg
 
 dicData = [] #사전목록
@@ -55,19 +56,24 @@ while True:
     hmWord = humanEg.humanInput(lastChar) #사람이 단어를 입력함
     hmWord = humanEg.humanConnectChar(hmWord,lastChar) #사람이 입력 한 단어를 가공함
     hmCanUse = humanEg.humanWordDefine(hmWord,dicData) #사람이 입력한 단어가 있는지 확인
-
     if hmCanUse:
         #word_dictionary_kor DB에 구성되지 않은 단어 일 경우, add_words DB 추가
-        print("[Error] '{}'은(는) DB에 구성되지 않은 단어입니다.".format(hmWord))
-        print("'{}'이(가) DB에 추가되었습니다. 다음 게임에서 적용됩니다.".format(hmWord))
-        f = open("db/word_dictionary_kor.txt", 'a')
-        f.write(hmWord + '\n')
-        f.close()
+        korean = hmWord
+        check = kda.posCheck(korean)
+        if check == "true":
+            print("[Error] '{}'은(는) DB에 구성되지 않은 단어입니다.".format(hmWord))
+            print("'{}'이(가) DB에 추가되었습니다. 다음 게임에서 적용됩니다.".format(hmWord))
+            f = open("db/word_dictionary_kor.txt", 'a')
+            f.write(hmWord + '\n')
+            f.close()
+        else:
+            print("[Error] '{}'은(는) 명사가 아닙니다.".format(hmWord))
         continue
-    isuse = humanEg.humanUseWord(hmWord,useData)
 
+    isuse = humanEg.humanUseWord(hmWord,useData)
     if isuse:
-        continue
+        print("Game End")
+        sys.exit()
     else:
         useData.append(hmWord)
 
@@ -84,7 +90,6 @@ while True:
         sys.exit()
 
     comWord = computerEg.useAgain(comWord,useData)
-
     if comWord == []:
         print("Word Chain Game Ending...")
         time.sleep(5)
